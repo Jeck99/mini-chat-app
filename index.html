@@ -2,14 +2,14 @@
 <html>
   <head>
     <title>mini chat Socket.IO</title>
-    <link rel="stylesheet" href="./style.css" />
   </head>
+  <!-- style for the chat  -->
   <style>
     h1 {
       text-align: center;
       color: #c7e8e6;
     }
-    form {
+    #formElement {
       background: rgba(0, 0, 0, 0.15);
       padding: 0.25rem;
       position: fixed;
@@ -21,25 +21,25 @@
       box-sizing: border-box;
       backdrop-filter: blur(10px);
     }
-    input {
+    #inputElement {
       border: none;
       padding: 0 1rem;
       flex-grow: 1;
       border-radius: 2rem;
       margin: 0.25rem;
     }
-    input:focus {
+    #inputElement:focus {
       outline: none;
     }
-    form > button {
+    #formElement > button {
       background: rgb(41, 67, 214);
       border-radius: 5px;
       color: #fff;
     }
-    #messages {
+    #msgListItem {
       list-style-type: none;
     }
-    #messages > li {
+    #msgListItem > li {
       background: #aae6d4a8;
       color: #062642;
       padding: 1%;
@@ -48,7 +48,7 @@
       width: 60%;
       float: left;
     }
-    #messages > li:nth-child(odd) {
+    #msgListItem > li:nth-child(odd) {
       background: #ffffff;
       color: #062642;
       float: right;
@@ -56,31 +56,31 @@
   </style>
   <body bgcolor="#170a16">
     <h1>MINI CHAT APP</h1>
-    <ul id="messages"></ul>
-    <form id="form" action="">
-      <input id="input" autocomplete="off" /><button>Send</button>
+    <ul id="msgListItem"></ul>
+    <form id="formElement" action="">
+      <input id="inputElement" autocomplete="off" /><button>Send</button>
     </form>
+    <!-- socket.io script import goes here  -->
     <script src="/socket.io/socket.io.js"></script>
-
+    <!-- javascript code goes here -->
     <script>
+      // creating a socket.io client object to connect to the server
       let socket = io();
-
-      let messages = document.getElementById("messages");
-      let form = document.getElementById("form");
-      let input = document.getElementById("input");
-
-      form.addEventListener("submit", function (e) {
+      //adding an event listener to the form element to listen for the submit event
+      formElement.addEventListener("submit", (e)=> {
         e.preventDefault();
-        if (input.value) {
-          socket.emit("message", input.value);
-          input.value = "";
+        if (inputElement.value) {
+          // sending the message event to the server with the value of the input element
+          socket.emit("message", inputElement.value);
+          inputElement.value = "";
         }
       });
-
+      //adding an event listener to the socket object to listen for the "message" event
       socket.on("message", (msg) => {
+        // creating a new list item element to display the message
         let item = document.createElement("li");
         item.textContent = msg;
-        messages.appendChild(item);
+        msgListItem.appendChild(item);
         window.scrollTo(0, document.body.scrollHeight);
       });
     </script>
